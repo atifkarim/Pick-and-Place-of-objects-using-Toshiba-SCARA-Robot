@@ -1,7 +1,7 @@
 #include <ros/ros.h>
 //#include"std_msgs/Int32.h"
 #include"std_msgs/String.h"
-#include"client_communication/connection_msg.h"
+#include"robot_communication/connection_msg.h"
 #include <sstream>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -61,7 +61,7 @@ bool IsAlive()
   }
 }
 
-/*void chatterCallback(const client_communication::connection_msg::ConstPtr& msg)
+/*void chatterCallback(const robot_communication::connection_msg::ConstPtr& msg)
   {
     ROS_INFO("I heard: [%s] and [%d]", msg->connectionFlage.c_str(),msg->socketId);
     m_socket=msg->socketId;

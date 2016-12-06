@@ -1,6 +1,7 @@
 #include <ros/ros.h>
 #include"std_msgs/String.h"
-#include"client_communication/connection_msg.h"
+#include"robot_communication/connection_msg.h"
+#include"robot_communication/current_pos_robot.h"
 #include <sstream>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -9,6 +10,8 @@
 #include <netdb.h>
 #include<iostream>
 #include <unistd.h>
+#include<QString>
+#include<QStringList>
 #define PORT  1001
 
 using namespace std;
@@ -28,63 +31,51 @@ bool ClientConnect(const char* host, int port, int iIdSocket)
 }
 
 
-std::string ReceiveString()
+void chatterCallback(const std_msgs::String::ConstPtr& msg)
 {
-  int recv_size;
-  std::vector<std::string> antwort;
-  while(1){
-    char server_reply[100];
-    recv_size = recv(m_socket, server_reply, 100, 0);
-    server_reply[recv_size]= '\0';
-    std::string reply_string(server_reply);
-    antwort.push_back(reply_string);
-    if(server_reply[recv_size-1] == '*'){
-      break;
+  char ReadString[500];
+  char c_Send[30];
+  bool b_Send;
+  double x,y,z,c;
+  ros::NodeHandle n;
+  ros::Publisher pub = n.advertise<robot_communication::current_pos_robot>("/robot_current_pos",1000);
+  robot_communication::current_pos_robot robot_pose_msg;
+  QString toSplitString;
+
+  strcpy(c_Send,msg->data.c_str());
+  b_Send = write(m_socket,c_Send,strlen(c_Send));
+  sleep(1);
+
+  recv(m_socket,ReadString,500,0);
+  toSplitString = QString::fromUtf8(ReadString);
+  QStringList ReceiveList = toSplitString.split(" "); //Konvertierung in QStringlist
+  ReceiveList.removeFirst(); //entferne "LESE"
+  for(int i = 0; i < ReceiveList.size(); i++)
+  {
+    if(ReceiveList.value(i).toDouble() == 0)
+    {
+      ReceiveList.removeAt(i); //entferne Leerstellen
+      i = i - 1;				//verschiebe die Schleife bei L�schung
     }
   }
-  return antwort[antwort.size()-1];
+  x = ReceiveList.value(0).toDouble(); //Werte werden Zugeordnet
+  y = ReceiveList.value(1).toDouble();
+  z = ReceiveList.value(2).toDouble();
+  c = ReceiveList.value(3).toDouble();
+
+
+  robot_pose_msg.PosX=x;
+  robot_pose_msg.PosY=y;
+  robot_pose_msg.PosZ=z;
+  robot_pose_msg.PosC=c;
+  pub.publish(robot_pose_msg);
 }
-
-
-bool IsAlive()
-{
-  char active[30];
-  strcpy(active,"4,0,0,0,0,0,0,0,0\r");
-  write(m_socket,active,strlen(active));
-  std::string antwort = ReceiveString();
-  if(antwort != ""){
-    return true;
-  }
-  else{
-    return false;
-  }
-}
-
-void chatterCallback(const std_msgs::String::ConstPtr& msg)
-  {
-    char ReadString[500];
-    char c_Send[30];
-    bool b_Send;
-    strcpy(c_Send,msg->data.c_str());
-    b_Send = write(m_socket,c_Send,strlen(c_Send));
-    sleep(2);
-//    for(int iii =0;iii < 10 ; iii++)
-//    {
-//          recv(m_socket,ReadString,500,0);
-//          for(int i=0;i<=strlen(ReadString);i++)
-//          {
-//             cout<<ReadString[i]<<endl;
-//          }
-//    }
-
-  }
 
 int main(int argc, char **argv)
 {
   // Set up ROS.
   ros::init(argc, argv, "receive_command");
   ros::NodeHandle n;
-
   int iPort = PORT;
   bool bConnected;
   const char* c_Host = "192.168.0.124";
@@ -100,6 +91,7 @@ int main(int argc, char **argv)
     cout << "Notconnected";
 
   ros::Subscriber sub = n.subscribe("/send_string", 1000, chatterCallback);
+
   ros::spin();
   close(m_socket);
 

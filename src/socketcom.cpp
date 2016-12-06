@@ -1,6 +1,6 @@
 #include <ros/ros.h>
 #include"std_msgs/Int32.h"
-#include"client_communication/connection_msg.h"
+#include"robot_communication/connection_msg.h"
 #include <sstream>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -36,7 +36,7 @@ int main(int argc, char **argv)
   // Set up ROS.
   ros::init(argc, argv, "socketcom");
   ros::NodeHandle n;
-  ros::Publisher socketId_pub = n.advertise<client_communication::connection_msg>("/socket_flage_id", 1000);
+  ros::Publisher socketId_pub = n.advertise<robot_communication::connection_msg>("/socket_flage_id", 1000);
   ros::Rate loop_rate(10);
 
   int iId_Socket,iPort = PORT;
@@ -52,7 +52,7 @@ int main(int argc, char **argv)
 
     // This is a message object. You stuff it with data, and then publish it.
 
-    client_communication::connection_msg msg;
+    robot_communication::connection_msg msg;
     std::stringstream sIdpublish;
 
     if(bConnected == true)

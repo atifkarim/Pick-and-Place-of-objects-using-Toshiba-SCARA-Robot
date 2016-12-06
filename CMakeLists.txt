@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(client_communication)
+project(robot_communication)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -52,6 +52,7 @@ ADD_DEFINITIONS(${QT_DEFINITIONS})
  add_message_files(
   FILES
   connection_msg.msg
+  current_pos_robot.msg
  )
 
 ## Generate services in the 'srv' folder
@@ -105,7 +106,7 @@ generate_messages(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES client_communication
+#  LIBRARIES robot_communication
   CATKIN_DEPENDS roscpp rospy std_msgs
 #  DEPENDS system_lib
 )
@@ -122,14 +123,14 @@ include_directories(
 )
 
 ## Declare a C++ library
-# add_library(client_communication
-#   src/${PROJECT_NAME}/client_communication.cpp
+# add_library(robot_communication
+#   src/${PROJECT_NAME}/robot_communication.cpp
 # )
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
-# add_dependencies(client_communication ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+# add_dependencies(robot_communication ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
  add_executable(Client src/Client.cpp)
@@ -172,7 +173,7 @@ include_directories(
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS client_communication client_communication_node
+# install(TARGETS robot_communication robot_communication_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -197,7 +198,7 @@ include_directories(
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_client_communication.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_robot_communication.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
