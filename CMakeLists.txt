@@ -133,31 +133,20 @@ include_directories(
 # add_dependencies(robot_communication ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
- add_executable(Client src/Client.cpp)
- add_executable(receiver src/receiver.cpp)
- add_executable(socketcom src/socketcom.cpp)
- add_executable(send_command src/send_command.cpp)
- add_executable(receive_command src/receive_command.cpp)
+ add_executable(convert_to_string src/send_command.cpp)
+ add_executable(send_to_robot src/receive_command.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-   add_dependencies(Client ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-   add_dependencies(receiver ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-   add_dependencies(socketcom ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-   add_dependencies(send_command ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-   add_dependencies(receive_command ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+   add_dependencies(convert_to_string  ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+   add_dependencies(send_to_robot ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
- target_link_libraries(Client ${catkin_LIBRARIES})
- target_link_libraries(Client ${QT_LIBRARIES})
- target_link_libraries(receiver ${catkin_LIBRARIES})
- target_link_libraries(receiver ${QT_LIBRARIES})
- target_link_libraries(socketcom ${catkin_LIBRARIES})
- target_link_libraries(socketcom ${QT_LIBRARIES})
- target_link_libraries(send_command ${catkin_LIBRARIES})
- target_link_libraries(send_command ${QT_LIBRARIES})
- target_link_libraries(receive_command ${catkin_LIBRARIES})
- target_link_libraries(receive_command ${QT_LIBRARIES})
+ target_link_libraries(convert_to_string  ${catkin_LIBRARIES})
+ target_link_libraries(convert_to_string  ${QT_LIBRARIES})
+ target_link_libraries(send_to_robot ${catkin_LIBRARIES})
+ target_link_libraries(send_to_robot ${QT_LIBRARIES})
 #############
 ## Install ##
 #############
